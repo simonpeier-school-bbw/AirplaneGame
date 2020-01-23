@@ -1,0 +1,9 @@
+blue,back/red,back/yellow,front/yellow,front
+blue,back/yellow,front/blue,back/red,front
+red,back/yellow,front/blue,back/yellow,back
+yellow,back/red,back/red,back/blue,front
+blue,front/red,back/yellow,back/red,front
+blue,front/yellow,back/red,back/red,front
+red,front/yellow,back/blue,back/blue,front
+yellow,front/blue,front/red,front/yellow,front
+red,front/yellow,back/blue,front/blue,back
