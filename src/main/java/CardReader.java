@@ -21,13 +21,9 @@ public class CardReader {
 
                 for (int i = 0; i < lineParts.length; i++) {
                     String[] planeInformation = lineParts[i].split(",");
-                    airplanes[i].setColor(planeInformation[0]);
 
-                    if (planeInformation[1].toLowerCase().equals("back")) {
-                        airplanes[i].setBack(true);
-                    } else {
-                        airplanes[i].setBack(false);
-                    }
+                    airplanes[i] = new Airplane(planeInformation[0], planeInformation[1].toLowerCase().equals("back"));
+                    airplanes[i].setColor(planeInformation[0]);
                 }
 
                 cards.add(new Card(airplanes[0], airplanes[1], airplanes[2], airplanes[3]));
