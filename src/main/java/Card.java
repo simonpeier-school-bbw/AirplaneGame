@@ -47,6 +47,10 @@ public class Card {
         return new Card(this.left, this.top, this.right, this.bottom);
     }
 
+    public Card clone() {
+        return new Card(top, right, bottom, left);
+    }
+
     @Override
     public String toString() {
         return "Card{" +
