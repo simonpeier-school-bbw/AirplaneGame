@@ -12,8 +12,17 @@ public class AirPlaneGameApplication {
         System.out.println("Solutions");
         System.out.println("=====================");
 
+        // find all solutions
         List<Board> solutions = Solver.findAllSolutions(new Board(), remainingCards);
+        // print solutions
         System.out.println(solutions.size());
+        // write solutions to file
+        printSolutions(solutions);
+
+        SolutionsWriter.writeSolutions(solutions);
+    }
+
+    private static void printSolutions(List<Board> solutions){
         for (Board board : solutions) {
             System.out.println("= " + board.toString());
         }

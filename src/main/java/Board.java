@@ -101,11 +101,12 @@ public class Board {
     public String toString() {
         StringBuilder board = new StringBuilder("Board{cards=");
 
-        System.out.println();
         for (int x = 0; x < 3; x++) {
             for (int y = 0; y < 3; y++) {
-                board.append(cards.get(new Coordinate(x, y))).append(",");
+                board.append(cards.get(new Coordinate(x, y)).toString());
+                board.append(" ");
             }
+            board.append(System.lineSeparator());
         }
         board.append("}");
 

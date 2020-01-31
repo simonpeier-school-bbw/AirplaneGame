@@ -54,7 +54,7 @@ public class Card {
     @Override
     public String toString() {
         return top + System.lineSeparator() +
-                left + " | " + right +
-                bottom;
+                left + " | " + right + System.lineSeparator() +
+                bottom + System.lineSeparator();
     }
 }
