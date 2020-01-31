@@ -7,10 +7,11 @@ import java.util.Objects;
 
 public class CardReader {
 
-    public ArrayList<Card> readCards() throws IOException {
+    public static ArrayList<Card> readCards() throws IOException {
         ArrayList<Card> cards = new ArrayList<>();
 
         try {
+            // get file from resources
             BufferedReader reader = new BufferedReader(new FileReader(Objects.requireNonNull(AirPlaneGameApplication.class.getClassLoader().getResource("cards.txt")).getFile()));
             String line;
 
@@ -19,6 +20,7 @@ public class CardReader {
                 String[] lineParts = line.split("/");
                 Airplane[] airplanes = new Airplane[4];
 
+                // split line up into plane parts
                 for (int i = 0; i < lineParts.length; i++) {
                     String[] planeInformation = lineParts[i].split(",");
 
@@ -26,6 +28,7 @@ public class CardReader {
                     airplanes[i].setColor(planeInformation[0]);
                 }
 
+                // add new Card to list with data from file
                 cards.add(new Card(airplanes[0], airplanes[1], airplanes[2], airplanes[3]));
             }
         } catch (FileNotFoundException e) {

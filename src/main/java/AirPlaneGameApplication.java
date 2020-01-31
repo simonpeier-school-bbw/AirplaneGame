@@ -4,25 +4,25 @@ import java.util.List;
 
 public class AirPlaneGameApplication {
     public static void main(String[] args) throws IOException {
-        CardReader cardReader = new CardReader();
-        ArrayList<Card> remainingCards = cardReader.readCards();
-        remainingCards.forEach(System.out::println);
+        // get cards from file
+        ArrayList<Card> remainingCards = CardReader.readCards();
 
+        // print out cards from file
+        remainingCards.forEach(System.out::println);
         System.out.println();
-        System.out.println("Solutions");
-        System.out.println("=====================");
 
         // find all solutions
         List<Board> solutions = Solver.findAllSolutions(new Board(), remainingCards);
-        // print solutions
-        System.out.println(solutions.size());
-        // write solutions to file
-        printSolutions(solutions);
 
+        // print solutions
+        printSolutions(solutions);
+        // write solutions to file
         SolutionsWriter.writeSolutions(solutions);
     }
 
-    private static void printSolutions(List<Board> solutions){
+    private static void printSolutions(List<Board> solutions) {
+        System.out.println("Solutions");
+        System.out.println("=====================");
         for (Board board : solutions) {
             System.out.println("= " + board.toString());
         }

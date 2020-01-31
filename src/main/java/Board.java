@@ -21,6 +21,7 @@ public class Board {
         currentCoordinate = new Coordinate(0, 0);
     }
 
+    // Add card to board if it fits in between the other cards
     public Board addIfFits(Card card) {
 
         // Board may be a solution
@@ -60,7 +61,7 @@ public class Board {
         return cards.get(new Coordinate(2, 2)) != null;
     }
 
-
+    // returns next coordinate of board, if it is the last coordinate, null is returned
     private Coordinate nextCoordinate() {
         int x;
         int y = 0;
