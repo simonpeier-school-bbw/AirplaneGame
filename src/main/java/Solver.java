@@ -1,56 +1,48 @@
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Solver {
-    public List<Board> getSolutions(Board partialBoard, List<Card> remainingCards) {
-        List<Board> validSolutions = new ArrayList<>();
+    public static List<Board> findAllSolutions(Board board, List<Card> cards) {
 
-        if (partialBoard.isSolution()) {
-            System.out.println(partialBoard.toString());
-            validSolutions.add(partialBoard);
-        } else {
-            System.out.println(partialBoard.toString());
+        List<Board> solutions = new LinkedList<>();
 
-            List<Card> clonedCards = cloneRemainingCards(remainingCards);
-            Card newCard = clonedCards.get(0);
-            clonedCards.remove(newCard);
+        List<Board> nextPossibleMoves = nextPossibleMoves(board, cards);
+        for (Board currentMove : nextPossibleMoves) {
+            if (currentMove.isSolution()) {
+                solutions.add(currentMove);
+            } else {
+                Card lastCard = currentMove.getCard(currentMove.getCurrentCoordinate());
+                List<Card> remaining = removed(lastCard, cards);
+                solutions.addAll(findAllSolutions(currentMove, remaining));
+            }
+        }
 
-            List<Coordinate> coordsWithEmptyCard = getCoordsWithEmptyCard(partialBoard);
+        return solutions;
+    }
 
-            for (Coordinate coord : coordsWithEmptyCard) {
-                for (int i = 0; i < 4; i++) {
-                    Board clonedBoard = partialBoard.clone();
-                    clonedBoard.getCards().put(coord.clone(), newCard.clone());
+    public static List<Board> nextPossibleMoves(Board board, List<Card> remainingCards) {
 
-                    if (clonedBoard.isSolution()) {
-                        List<Board> solutions = getSolutions(clonedBoard, clonedCards);
-                        for (Board solution : solutions) {
-                            solutions.add(solution);
-                        }
-                    }
-                    newCard = newCard.rotated90DegreesToRight();
+        List<Board> boardsWithOneMoreCard = new LinkedList<>();
+
+        for (Card card : remainingCards) {
+            Board addedUnturned = board.addIfFits(card);
+            if (addedUnturned != null) {
+                boardsWithOneMoreCard.add(addedUnturned);
+            }
+            for (int turn = 1; turn <= 3; turn++) {
+                card = card.rotated90DegreesToRight();
+                Board addedTurned = board.addIfFits(card);
+                if (addedTurned != null) {
+                    boardsWithOneMoreCard.add(addedTurned);
                 }
             }
         }
-        return validSolutions;
+
+        return boardsWithOneMoreCard;
     }
 
-    private static List<Card> cloneRemainingCards(List<Card> remainingCards) {
-        List<Card> clonedCards = new ArrayList<>();
-        for (Card card : remainingCards) {
-            clonedCards.add(card.clone());
-        }
-        return clonedCards;
-    }
-
-    private static List<Coordinate> getCoordsWithEmptyCard(Board partialBoard) {
-        List<Coordinate> coordsWithEmptyCard = new ArrayList<>();
-
-        for (Coordinate coord : partialBoard.getCards().keySet()) {
-            if (partialBoard.getCard(coord) != null) {
-                coordsWithEmptyCard.add(coord);
-            }
-        }
-        return coordsWithEmptyCard;
+    private static List<Card> removed(Card lastcard, List<Card> cardsLeft) {
+        cardsLeft.remove(lastcard);
+        return cardsLeft;
     }
 }

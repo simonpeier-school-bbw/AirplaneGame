@@ -25,9 +25,12 @@ public class Airplane {
 
     @Override
     public String toString() {
-        return "Airplane{" +
-                "color='" + color +
-                ", isBack=" + isBack +
-                '}';
+        String part;
+        if (isBack){
+            part = "back";
+        }else {
+            part = "front";
+        }
+        return color + "," + part;
     }
 }

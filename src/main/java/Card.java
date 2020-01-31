@@ -53,11 +53,8 @@ public class Card {
 
     @Override
     public String toString() {
-        return "Card{" +
-                "top=" + top +
-                ", right=" + right +
-                ", bottom=" + bottom +
-                ", left=" + left +
-                '}';
+        return top + System.lineSeparator() +
+                left + " | " + right +
+                bottom;
     }
 }

@@ -3,10 +3,12 @@ import java.util.Map;
 
 public class Board {
     private Map<Coordinate, Card> cards;
+    private Coordinate currentCoordinate;
 
-    public Board(Map<Coordinate, Card> cards) {
+    public Board(Map<Coordinate, Card> cards, Coordinate currentCoordinate) {
         super();
         this.cards = cards;
+        this.currentCoordinate = currentCoordinate;
     }
 
     public Board() {
@@ -16,66 +18,63 @@ public class Board {
                 cards.put(new Coordinate(x, y), null);
             }
         }
+        currentCoordinate = new Coordinate(0, 0);
     }
 
-    public Board clone() {
-        Board clonedBoard = new Board();
+    public Board addIfFits(Card card) {
 
-        for (Coordinate coord : cards.keySet()) {
-            Card currentCard = cards.get(coord);
+        // Board may be a solution
+        Card cardAbove = cards.get(new Coordinate(currentCoordinate.getX(), currentCoordinate.getY() + 1));
+        Card cardToRight = cards.get(new Coordinate(currentCoordinate.getX() + 1, currentCoordinate.getY()));
+        Card cardBelow = cards.get(new Coordinate(currentCoordinate.getX(), currentCoordinate.getY() - 1));
+        Card cardToLeft = cards.get(new Coordinate(currentCoordinate.getX() - 1, currentCoordinate.getY()));
 
-            if (currentCard != null) {
-                currentCard = currentCard.clone();
+        // Surrounding Cards exist -> solution is possible
+        if (cardAbove != null) {
+            if (!(card.getTop().isBack() == cardAbove.getBottom().isBack() && card.getTop().getColor().equals(cardAbove.getBottom().getColor()))) {
+                return null;
             }
-
-            clonedBoard.getCards().put(coord.clone(), currentCard);
+        }
+        if (cardToRight != null) {
+            if (card.getRight().isBack() == cardToRight.getLeft().isBack() && card.getRight().getColor().equals(cardToRight.getLeft().getColor())) {
+                return null;
+            }
+        }
+        if (cardBelow != null) {
+            if (card.getBottom().isBack() == cardBelow.getTop().isBack() && card.getBottom().getColor().equals(cardBelow.getTop().getColor())) {
+                return null;
+            }
+        }
+        if (cardToLeft != null) {
+            if (card.getLeft().isBack() == cardToLeft.getRight().isBack() && card.getLeft().getColor().equals(cardToLeft.getRight().getColor())) {
+                return null;
+            }
         }
 
-        return clonedBoard;
-
+        Board board = new Board(cards, nextCoordinate());
+        board.setCard(nextCoordinate(), card);
+        return board;
     }
 
     public boolean isSolution() {
-        for (Map.Entry<Coordinate, Card> entry : this.cards.entrySet()) {
-            Card currentCard = entry.getValue();
+        return cards.get(new Coordinate(2, 2)) != null;
+    }
 
-            // board can't be a solution
-            if (currentCard == null) {
-                return false;
+
+    private Coordinate nextCoordinate() {
+        int x;
+        int y = 0;
+
+        if (currentCoordinate.getX() == 2) {
+            x = 0;
+            if (currentCoordinate.getY() == 2) {
+                return null;
             }
-            // board may be a solution
-            else {
-                Card cardAbove = cards.get(new Coordinate(entry.getKey().getX(), entry.getKey().getY() + 1));
-                Card cardToRight = cards.get(new Coordinate(entry.getKey().getX() + 1, entry.getKey().getY()));
-                Card cardBelow = cards.get(new Coordinate(entry.getKey().getX(), entry.getKey().getY() - 1));
-                Card cardToLeft = cards.get(new Coordinate(entry.getKey().getX() - 1, entry.getKey().getY()));
-
-                // Surrounding Cards exist -> solution is possible
-                if (cardAbove != null) {
-                    if (currentCard.getTop().isBack() == cardAbove.getBottom().isBack() && currentCard.getTop().getColor().equals(cardAbove.getBottom().getColor())) {
-                        return true;
-                    }
-                }
-                if (cardToRight != null) {
-                    if (currentCard.getRight().isBack() == cardToRight.getLeft().isBack() && currentCard.getRight().getColor().equals(cardToRight.getLeft().getColor())) {
-                        return true;
-                    }
-                }
-                if (cardBelow != null) {
-                    if (currentCard.getBottom().isBack() == cardBelow.getTop().isBack() && currentCard.getBottom().getColor().equals(cardBelow.getTop().getColor())) {
-                        return true;
-                    }
-                }
-                if (cardToLeft != null) {
-                    if (currentCard.getLeft().isBack() == cardToLeft.getRight().isBack() && currentCard.getLeft().getColor().equals(cardToLeft.getRight().getColor())) {
-                        return true;
-                    }
-                }
-
-            }
-
+            y = currentCoordinate.getY() + 1;
+        } else {
+            x = currentCoordinate.getX() + 1;
         }
-        return false;
+        return new Coordinate(x, y);
     }
 
     public Map<Coordinate, Card> getCards() {
@@ -88,6 +87,14 @@ public class Board {
 
     public void setCards(Map<Coordinate, Card> cards) {
         this.cards = cards;
+    }
+
+    public void setCard(Coordinate coord, Card card) {
+        cards.put(coord, card);
+    }
+
+    public Coordinate getCurrentCoordinate() {
+        return currentCoordinate;
     }
 
     @Override
